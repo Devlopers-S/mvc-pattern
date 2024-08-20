@@ -1,8 +1,7 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const PurchaseCourse = ({ course, onPurchase }) => {
-
   const path = useLocation();
   const pathname = path.pathname;
   return (
@@ -12,7 +11,6 @@ const PurchaseCourse = ({ course, onPurchase }) => {
         <p>{course.description}</p>
         <p>{course.price}</p>
         <div className="flex items-center justify-center gap-3">
-         
           {pathname === "/user/allCourses" ? (
             <button
               className="bg-gray-400 rounded-md px-3 py-1 my-3"
@@ -21,9 +19,12 @@ const PurchaseCourse = ({ course, onPurchase }) => {
               Purchase
             </button>
           ) : (
-            <button className="bg-gray-400 rounded-md px-3 py-1 my-3" onClick={()=> onPurchase(course)}>
-            Edit
-          </button>
+            <Link
+              className="bg-gray-400 rounded-md px-3 py-1 my-3"
+              to={`/admin/updateCourse/${course._id}`}
+            >
+              Edit
+            </Link>
           )}
         </div>
       </div>

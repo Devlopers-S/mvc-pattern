@@ -75,11 +75,11 @@ function addCourse(req, res) {
 async function updateCourse(req, res) {
   try {
     // Extract CourseId and the fields to update from the request body
-    const { CourseId, name, price, description } = req.body;
+    const { _id, name, price, description } = req.body;
 
     // Find the course by CourseId and update it
     const updatedCourse = await Course.findOneAndUpdate(
-      { CourseId },
+      { _id },
       { name, price, description },
       { new: true } // This option returns the updated document
     );
@@ -95,8 +95,6 @@ async function updateCourse(req, res) {
     res.status(500).json({ message: "Server Error", error: error.message });
   }
 }
-
-
 
 async function allUsers(req, res) {
   try {
