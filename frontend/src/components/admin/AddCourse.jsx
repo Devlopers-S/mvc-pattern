@@ -6,7 +6,6 @@ const AddCourse = () => {
   const navigate = useNavigate();
   const [course, setCourse] = useState({
     name: "",
-    courseId: "",
     price: "",
     description: "",
   });
@@ -17,7 +16,6 @@ const AddCourse = () => {
     // Check for empty fields
     if (
       course.name === "" ||
-      course.courseId === "" ||
       course.price === "" ||
       course.description === ""
     ) {
@@ -47,7 +45,6 @@ axios
     // Clear form fields after successful submission
     setCourse({
       name: "",
-      courseId: "",
       price: "",
       description: "",
     });
@@ -63,15 +60,6 @@ axios
           placeholder="Name"
           value={course.name}
           onChange={(e) => setCourse({ ...course, name: e.target.value })}
-        />
-        <input
-          className="p-2 rounded-md border-2 border-gray-300"
-          type="number"
-          placeholder="course Id"
-          value={course.courseId}
-          onChange={(e) =>
-            setCourse({ ...course, courseId: e.target.value.toString() })
-          }
         />
         <input
           className="p-2 rounded-md border-2 border-gray-300"

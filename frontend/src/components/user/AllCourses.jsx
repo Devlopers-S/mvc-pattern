@@ -19,10 +19,9 @@ const AllCourses = () => {
 
   useEffect(() => {
     const email = localStorage.getItem("userEmail");
-
     if (email) {
       axios
-        .get(`http://localhost:4000/course/purchase?email=${email}`)
+        .get(`http://localhost:4000/user/purchase?email=${email}`)
         .then((res) => setPurchaseCourses(res.data))
         .catch((error) =>
           console.error("Error fetching purchased courses:", error)
@@ -36,27 +35,26 @@ const AllCourses = () => {
       console.error("No user email found in local storage");
       return;
     }
-
     // Check if the product is already purchased
-    if (purchaseCourses.some((p) => p.courseId === course.courseId)) {
+    if (purchaseCourses.some((p) => p.CourseId === course.CourseId)) {
       alert("course is already purchaed");
       return;
     } else {
       alert("course added");
     }
 
-    axios
-      .post("http://localhost:4000/user/purchase", {
-        email,
-        courseId: course.courseId,
-      })
-      .then((res) => {
-        setPurchaseCourses((prev) => [...prev, course]);
-        console.log("Product added successfully");
-      })
-      .catch((err) => {
-        console.error("Error purchasing product:", err);
-      });
+   axios
+     .post("http://localhost:4000/user/purchase", {
+       email,
+       courseId: course.CourseId,
+     })
+     .then((res) => {
+       console.log("Backend response:", res.data);
+       setPurchaseCourses((prev) => [...prev, course]);
+     })
+     .catch((err) => {
+       console.error("Error purchasing product:", err);
+     });
   };
 
   const buttons = [

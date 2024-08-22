@@ -21,7 +21,7 @@ const PurchaseCourse = ({ course, onPurchase }) => {
           ) : (
             <Link
               className="bg-gray-400 rounded-md px-3 py-1 my-3"
-              to={`/admin/updateCourse/${course._id}`}
+              to={`/admin/updateCourse/${course.courseId}`}
             >
               Edit
             </Link>
