@@ -1,8 +1,20 @@
+const { Config } = require("../helper");
 const { User } = require("../modules/index");
+const { Course } = require("../modules/index");
 
-function userSignUp(req, res) {
+async function userSignUp(req, res) {
   const { name, email, password } = req.body;
-  const user = new User({ name, email, password });
+
+  const con = await Config.findOne({ Id: "1" });
+
+  var ii = String(Number(con.totalUser) + 1);
+
+  const user = new User({ Id: ii, name, email, password });
+
+  con.totalUser = String(Number(con.totalUser) + 1);
+  con.save().then((data) => {
+    console.log("done");
+  });
 
   user
     .save()
@@ -48,21 +60,24 @@ async function userUpdate(req, res) {
     res.status(500).json({ message: "Server error", error });
   }
 }
- 
+
 async function purchaseCourse(req, res) {
   try {
     const { email, courseId } = req.body;
-
     // Find the user by email
     const user = await User.findOne({ email });
-
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-
+    const aCourse = await Course.findOne({ CourseId: courseId });
+    if (aCourse == user.purchase) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    console.log("user : ", user);
+    console.log("aCourse : ", aCourse);
     // Add the productId to the purchase array
-    user.purchase.push( courseId);
-  
+    user.purchase.push(aCourse);
+
     // Save the updated user
     await user.save();
 
@@ -71,6 +86,7 @@ async function purchaseCourse(req, res) {
     res
       .status(500)
       .json({ message: "Internal Server Error", error: error.message });
+    console.log(error);
   }
 }
 

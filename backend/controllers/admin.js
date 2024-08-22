@@ -1,9 +1,18 @@
 const { Admin, Course, User } = require("../modules/index");
+const { Config } = require("../helper");
 
-// Admin Signup
-function adminSignup(req, res) {
+async function adminSignup(req, res) {
   const { name, email, password } = req.body;
-  const newAdmin = new Admin({ name, email, password });
+
+  const con = await Config.findOne({ Id: "1" }); 
+  const ii = String(Number(con.totalAdmin) + 1); 
+
+  const newAdmin = new Admin({ name, email, password, adminId: ii });
+
+  con.totalAdmin = ii;
+  con.save().then((data) => {
+    console.log("done");
+  });
 
   newAdmin
     .save()
@@ -53,14 +62,23 @@ async function updateAdmin(req, res) {
   }
 }
 
-function addCourse(req, res) {
-  const { name, price, description, courseId } = req.body;
+async function addCourse(req, res) {
+  const { name, price, description } = req.body;
+
+  const con = await Config.findOne({ Id: "1" });
+
+  var ii = String(Number(con.totalCourse) + 1);
 
   const newCourse = new Course({
     name,
     price,
     description,
-    CourseId: courseId,
+    CourseId: ii,
+  });
+
+  con.totalCourse = String(Number(con.totalCourse) + 1);
+  con.save().then((data) => {
+    console.log("done");
   });
 
   newCourse
