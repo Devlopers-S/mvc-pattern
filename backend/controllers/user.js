@@ -64,19 +64,27 @@ async function userUpdate(req, res) {
 async function purchaseCourse(req, res) {
   try {
     const { email, courseId } = req.body;
+
     // Find the user by email
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    const aCourse = await Course.findOne({ CourseId: courseId });
-    if (aCourse == user.purchase) {
-      return res.status(404).json({ message: "User not found" });
+
+    // Check if the course is already purchased by the user
+    const alreadyPurchased = user.purchase.some((p) => p.CourseId === courseId);
+    if (alreadyPurchased) {
+      return res.status(400).json({ message: "Course already purchased" });
     }
-    console.log("user : ", user);
-    console.log("aCourse : ", aCourse);
-    // Add the productId to the purchase array
-    user.purchase.push(aCourse);
+
+    // Find the course by courseId
+    const course = await Course.findOne({ CourseId: courseId });
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+
+    // Add the course to the user's purchase array
+    user.purchase.push(course);
 
     // Save the updated user
     await user.save();
@@ -86,7 +94,21 @@ async function purchaseCourse(req, res) {
     res
       .status(500)
       .json({ message: "Internal Server Error", error: error.message });
-    console.log(error);
+    console.error(error);
+  }
+}
+
+async function getPurchaseCourses(req, res) {
+  const email = req.query.email; // Since it's a GET request, use query parameters
+  try {
+    const user = await User.findOne({ email });
+    if (user) {
+      res.status(200).json(user.purchase); // Send only the purchased courses array
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
   }
 }
 
@@ -104,4 +126,5 @@ module.exports = {
   userUpdate,
   purchaseCourse,
   completeCourse,
+  getPurchaseCourses,
 };

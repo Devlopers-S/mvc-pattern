@@ -28,7 +28,7 @@ axios
   .post("http://localhost:4000/admin/AddCourse", course)
   .then((response) => {
     console.log(response.data);
-    navigate("/allCourses");
+    navigate("/admin/allCourses");
   })
   .catch((error) => {
     if (error.response) {

@@ -26,7 +26,7 @@ const UpdateCourse = () => {
 
   
     axios
-      .post(`http://localhost:4000/admin/UpdateCourse/${course._id}`, course)
+      .post(`http://localhost:4000/admin/UpdateCourse/${course.CourseId}`, course)
       .then((response) => {
         console.log(response.data);
       })

@@ -17,18 +17,19 @@ const AllCourses = () => {
       .catch((error) => console.error("Error fetching courses:", error));
   }, []);
 
-  useEffect(() => {
-    const email = localStorage.getItem("userEmail");
-    if (email) {
-      axios
-        .get(`http://localhost:4000/user/purchase?email=${email}`)
-        .then((res) => setPurchaseCourses(res.data))
-        .catch((error) =>
-          console.error("Error fetching purchased courses:", error)
-        );
-    }
-  }, []);
-
+ useEffect(() => {
+   const email = localStorage.getItem("userEmail");
+   if (email) {
+     fetch(`http://localhost:4000/user/getpurchaseCourses?email=${email}`)
+       .then((res) => res.json())
+       .then((data) => {
+         setPurchaseCourses(data); // Assuming `data` is an array of courses
+       })
+       .catch((error) =>
+         console.error("Error fetching purchased courses:", error)
+       );
+   }
+ }, []);
   const handlePurchase = (course) => {
     const email = localStorage.getItem("userEmail");
     if (!email) {
@@ -42,7 +43,6 @@ const AllCourses = () => {
     } else {
       alert("course added");
     }
-
    axios
      .post("http://localhost:4000/user/purchase", {
        email,
@@ -54,7 +54,7 @@ const AllCourses = () => {
      })
      .catch((err) => {
        console.error("Error purchasing product:", err);
-     });
+    });
   };
 
   const buttons = [
