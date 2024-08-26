@@ -10,10 +10,9 @@ const AdminAllCourses = () => {
   const [activeButton, setActiveButton] = useState(0);
 
   useEffect(() => {
-    fetch("http://localhost:4000/course/allCourse")
-      .then((res) => res.json())
-      .then((data) => {
-        setCourses(data);
+    axios.get("http://localhost:4000/course/allCourse")
+      .then((res) => {
+        setCourses(res.data);
       })
       .catch((error) => console.error("Error fetching courses:", error));
   }, []);
@@ -39,7 +38,7 @@ const AdminAllCourses = () => {
     }
 
     // Check if the product is already purchased
-    if (purchaseCourses.some((p) => p.courseId === course.courseId)) {
+    if (purchaseCourses.some((p) => p.CourseId === course.CourseId)) {
       alert("course is already purchaed");
       return;
     } else {
@@ -49,7 +48,7 @@ const AdminAllCourses = () => {
     axios
       .post("http://localhost:4000/user/purchase", {
         email,
-        courseId: course.courseId,
+        CourseId: course.CourseId,
       })
       .then((res) => {
         setPurchaseCourses((prev) => [...prev, course]);
@@ -75,20 +74,28 @@ const AdminAllCourses = () => {
       {activeButton === 1 && <AddCourse />}
       {/* All Products */}
       <div className={`flex-wrap ${activeButton === 0 ? "flex" : "hidden"}`}>
-        {courses.map((courses, index) => (
-          <PurchaseCourse
-            course={courses}
+        {courses.length === 0 ? <p>No courses</p> : (
+          <>
+            {courses.map((courses, index) => (
+              <PurchaseCourse
+            course={courses}  
             onPurchase={handlePurchase}
             key={index}
           />
         ))}
+          </>
+        )}
       </div>
 
       {/* Purchased Courses */}
       <div className={`flex-wrap ${activeButton === 1 ? "flex" : "hidden"}`}>
-        {purchaseCourses.map((course, index) => (
-          <PurchaseCourse course={course} key={index} />
+        {purchaseCourses.length === 0 ? <p>No purchased courses</p> : ( 
+          <>
+            {purchaseCourses.map((course, index) => (
+              <PurchaseCourse course={course} key={index} />
         ))}
+          </>
+        )}
       </div>
     </div>
   );

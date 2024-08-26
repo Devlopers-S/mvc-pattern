@@ -111,7 +111,11 @@ async function getPurchaseCourses(req, res) {
     res.status(500).json({ message: "Server error", error });
   }
 }
-
+async function getCourse(req, res) {
+  const { CourseId } = req.params;
+  const course = await Course.findOne({ CourseId });
+  res.status(200).json(course);
+}
 async function completeCourse(req, res) {
   const { email, courseId } = req.body;
   const user = await User.findOne({ email });
@@ -124,6 +128,7 @@ module.exports = {
   userSignUp,
   userLogin,
   userUpdate,
+  getCourse,
   purchaseCourse,
   completeCourse,
   getPurchaseCourses,

@@ -4,8 +4,8 @@ const { Config } = require("../helper");
 async function adminSignup(req, res) {
   const { name, email, password } = req.body;
 
-  const con = await Config.findOne({ Id: "1" }); 
-  const ii = String(Number(con.totalAdmin) + 1); 
+  const con = await Config.findOne({ Id: "1" });
+  const ii = String(Number(con.totalAdmin) + 1);
 
   const newAdmin = new Admin({ name, email, password, adminId: ii });
 
@@ -93,11 +93,12 @@ async function addCourse(req, res) {
 async function updateCourse(req, res) {
   try {
     // Extract CourseId and the fields to update from the request body
-    const { _id, name, price, description } = req.body;
+    const { CourseId } = req.params;
+    const { name, price, description } = req.body;
 
     // Find the course by CourseId and update it
     const updatedCourse = await Course.findOneAndUpdate(
-      { _id },
+      { CourseId },
       { name, price, description },
       { new: true } // This option returns the updated document
     );
@@ -142,7 +143,21 @@ async function DeleteUser(req, res) {
     res.status(500).json({ message: "Server Error", error: error.message });
   }
 }
-
+async function DeleteCourse(req, res) {
+  try {
+    const { CourseId } = req.body;
+    const deletedCourse = await Course.findOneAndDelete({ CourseId });
+    if (!deletedCourse) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+    res
+      .status(200)
+      .json({ message: "Course deleted successfully", course: deletedCourse });
+  } catch (error) {
+    console.error("Error deleting course:", error);
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+}
 module.exports = {
   adminSignup,
   adminLogin,
@@ -151,4 +166,5 @@ module.exports = {
   allUsers,
   DeleteUser,
   updateCourse,
+  DeleteCourse,
 };

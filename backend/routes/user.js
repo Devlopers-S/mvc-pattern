@@ -6,6 +6,7 @@ const {
   purchaseCourse,
   completeCourse,
   getPurchaseCourses,
+  getCourse,
 } = require("../controllers/user");
 const router = express.Router();
 
@@ -16,4 +17,5 @@ router.post("/purchase", purchaseCourse);
 router.post("/complete", completeCourse);
 router.post("/purchaseCourses", getPurchaseCourses);
 router.get("/getPurchaseCourses", getPurchaseCourses);
+router.get("/getCourse/:CourseId", getCourse);
 module.exports = router;

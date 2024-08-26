@@ -73,20 +73,28 @@ const AllCourses = () => {
 
       {/* All Products */}
       <div className={`flex-wrap ${activeButton === 0 ? "flex" : "hidden"}`}>
+        {courses.length === 0 ? <p>No courses</p> : (
+        <>
         {courses.map((courses , index) => (
           <PurchaseCourse
-            course={courses}
-            onPurchase={handlePurchase}
-            key={index}
-          />
-        ))}
+              course={courses}
+                onPurchase={handlePurchase}
+                key={index}
+              />
+            ))}
+          </> 
+        )}
       </div>
 
       {/* Purchased Courses */}
       <div className={`flex-wrap ${activeButton === 1 ? "flex" : "hidden"}`}>
-        {purchaseCourses.map((course, index) => (
-          <PurchaseCourse course={course} key={index} />
-        ))}
+        {purchaseCourses.length === 0 ? <p>No purchased courses</p> : (
+          <>
+            {purchaseCourses.map((course, index) => (
+              <PurchaseCourse course={course} key={index} />
+            ))}
+          </>
+        )}
       </div>
     </div>
   );

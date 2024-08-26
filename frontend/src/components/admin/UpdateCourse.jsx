@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const UpdateCourse = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const [course, setCourse] = useState({
     name: "",
-    _id: "",
+    CourseId: id || "",
     price: "",
     description: "",
   });
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -21,14 +23,17 @@ const UpdateCourse = () => {
       course.description === ""
     ) {
       alert("All fields are required");
-      return; // Stop further execution
+      return;
     }
-
-  
     axios
-      .post(`http://localhost:4000/admin/UpdateCourse/${course.CourseId}`, course)
+      .post(
+        `http://localhost:4000/admin/UpdateCourse/${id}`,
+        course
+      )
       .then((response) => {
         console.log(response.data);
+        alert("Course updated successfully");
+        navigate("/admin/allCourses");
       })
       .catch((error) => {
         if (error.response) {
@@ -44,7 +49,7 @@ const UpdateCourse = () => {
     // Clear form fields after successful submission
     setCourse({
       name: "",
-      _id: "",
+      CourseId: "",
       price: "",
       description: "",
     });
