@@ -14,7 +14,7 @@ router.post("/signup", userSignUp);
 router.post("/login", userLogin);
 router.put("/update", userUpdate);
 router.post("/purchase", purchaseCourse);
-router.post("/complete", completeCourse);
+router.post("/completeCourses", completeCourse);
 router.post("/purchaseCourses", getPurchaseCourses);
 router.get("/getPurchaseCourses", getPurchaseCourses);
 router.get("/getCourse/:CourseId", getCourse);

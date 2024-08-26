@@ -6,6 +6,7 @@ import ButtonGroup from "./ButtonGroup";
 const AllCourses = () => {
   const [courses, setCourses] = useState([]);
   const [purchaseCourses, setPurchaseCourses] = useState([]);
+  const [completeCourse, setCompleteCourse] = useState([]);
   const [activeButton, setActiveButton] = useState(0);
 
   useEffect(() => {
@@ -30,6 +31,7 @@ const AllCourses = () => {
         );
     }
   }, []);
+
   const handlePurchase = (course) => {
     const email = localStorage.getItem("userEmail");
     if (!email) {
@@ -56,6 +58,27 @@ const AllCourses = () => {
         console.error("Error purchasing product:", err);
       });
   };
+  const handleComplete = (course) => {
+    const email = localStorage.getItem("userEmail");
+    if (!email) {
+      console.error("No user email found in local storage");
+      return;
+    }
+
+    axios
+      .post("http://localhost:4000/user/completeCourses", {
+        email,
+        courseId: course.CourseId,
+      })
+      .then((res) => {
+        console.log("Backend response:", res.data);
+        alert("Course completed successfully");
+      })
+      .catch((err) => {
+        console.error("Error completing course:", err);
+        alert("Failed to complete the course");
+      });
+  };
 
   const buttons = [
     { label: "All Courses", status: "all" },
@@ -79,6 +102,7 @@ const AllCourses = () => {
               <PurchaseCourse
                 course={courses}
                 onPurchase={handlePurchase}
+                onComplete={handleComplete}
                 key={index}
               />
             ))}

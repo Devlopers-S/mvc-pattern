@@ -117,11 +117,40 @@ async function getCourse(req, res) {
   res.status(200).json(course);
 }
 async function completeCourse(req, res) {
-  const { email, courseId } = req.body;
-  const user = await User.findOne({ email });
-  user.complete.push(courseId);
-  await user.save();
-  res.status(200).json({ message: "Course completed successfully" });
+  try {
+    const { email, courseId } = req.body;
+
+    // Find the user by email
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if the course is already completed by the user
+    const alreadyComplete = user.complete.some((c) => c.courseId === courseId);
+    if (alreadyComplete) {
+      return res.status(400).json({ message: "Course already completed" });
+    }
+
+    // Find the course by courseId
+    const course = await Course.findOne({ CourseId: courseId });
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+
+    // Add the course to the user's complete array
+    user.complete.push({ courseId: courseId, completed: true });
+
+    // Save the updated user
+    await user.save();
+
+    res.status(200).json({ message: "Course completed successfully" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
+    console.error(error);
+  }
 }
 
 module.exports = {
