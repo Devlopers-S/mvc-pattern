@@ -24,6 +24,7 @@ const courseSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   description: { type: String, required: true },
   CourseId: { type: String, required: true },
+  complete: { type: Boolean, default: false },
 });
 
 // Model creation

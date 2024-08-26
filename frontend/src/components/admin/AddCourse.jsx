@@ -8,6 +8,7 @@ const AddCourse = () => {
     name: "",
     price: "",
     description: "",
+    complete: false,
   });
 
   const handleSubmit = (e) => {
@@ -24,23 +25,22 @@ const AddCourse = () => {
     }
 
     console.log("Course added successfully");
-axios
-  .post("http://localhost:4000/admin/AddCourse", course)
-  .then((response) => {
-    console.log(response.data);
-    navigate("/admin/allCourses");
-  })
-  .catch((error) => {
-    if (error.response) {
-      console.error("Error response:", error.response.data);
-    } else if (error.request) {
-      console.error("No response received:", error.request);
-    } else {
-      console.error("Error setting up the request:", error.message);
-    }
-    alert("Error adding the course!");
-  });
-
+    axios
+      .post("http://localhost:4000/admin/AddCourse", course)
+      .then((response) => {
+        console.log(response.data);
+        navigate("/admin/allCourses");
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.error("Error response:", error.response.data);
+        } else if (error.request) {
+          console.error("No response received:", error.request);
+        } else {
+          console.error("Error setting up the request:", error.message);
+        }
+        alert("Error adding the course!");
+      });
 
     // Clear form fields after successful submission
     setCourse({
@@ -79,7 +79,8 @@ axios
         />
         <button
           onClick={handleSubmit}
-          className="bg-blue-500 text-white p-2 rounded-md">
+          className="bg-blue-500 text-white p-2 rounded-md"
+        >
           Submit
         </button>
       </form>

@@ -7,7 +7,7 @@ const AllCourses = () => {
   const [courses, setCourses] = useState([]);
   const [purchaseCourses, setPurchaseCourses] = useState([]);
   const [activeButton, setActiveButton] = useState(0);
-  
+
   useEffect(() => {
     fetch("http://localhost:4000/course/allCourse")
       .then((res) => res.json())
@@ -17,19 +17,19 @@ const AllCourses = () => {
       .catch((error) => console.error("Error fetching courses:", error));
   }, []);
 
- useEffect(() => {
-   const email = localStorage.getItem("userEmail");
-   if (email) {
-     fetch(`http://localhost:4000/user/getpurchaseCourses?email=${email}`)
-       .then((res) => res.json())
-       .then((data) => {
-         setPurchaseCourses(data); // Assuming `data` is an array of courses
-       })
-       .catch((error) =>
-         console.error("Error fetching purchased courses:", error)
-       );
-   }
- }, []);
+  useEffect(() => {
+    const email = localStorage.getItem("userEmail");
+    if (email) {
+      fetch(`http://localhost:4000/user/getpurchaseCourses?email=${email}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setPurchaseCourses(data); // Assuming `data` is an array of courses
+        })
+        .catch((error) =>
+          console.error("Error fetching purchased courses:", error)
+        );
+    }
+  }, []);
   const handlePurchase = (course) => {
     const email = localStorage.getItem("userEmail");
     if (!email) {
@@ -43,18 +43,18 @@ const AllCourses = () => {
     } else {
       alert("course added");
     }
-   axios
-     .post("http://localhost:4000/user/purchase", {
-       email,
-       courseId: course.CourseId,
-     })
-     .then((res) => {
-       console.log("Backend response:", res.data);
-       setPurchaseCourses((prev) => [...prev, course]);
-     })
-     .catch((err) => {
-       console.error("Error purchasing product:", err);
-    });
+    axios
+      .post("http://localhost:4000/user/purchase", {
+        email,
+        courseId: course.CourseId,
+      })
+      .then((res) => {
+        console.log("Backend response:", res.data);
+        setPurchaseCourses((prev) => [...prev, course]);
+      })
+      .catch((err) => {
+        console.error("Error purchasing product:", err);
+      });
   };
 
   const buttons = [
@@ -73,22 +73,24 @@ const AllCourses = () => {
 
       {/* All Products */}
       <div className={`flex-wrap ${activeButton === 0 ? "flex" : "hidden"}`}>
-        {courses.length === 0 ? <p>No courses</p> : (
-        <>
-        {courses.map((courses , index) => (
-          <PurchaseCourse
-              course={courses}
+        {courses.length > 0 && (
+          <>
+            {courses.map((courses, index) => (
+              <PurchaseCourse
+                course={courses}
                 onPurchase={handlePurchase}
                 key={index}
               />
             ))}
-          </> 
+          </>
         )}
       </div>
 
       {/* Purchased Courses */}
       <div className={`flex-wrap ${activeButton === 1 ? "flex" : "hidden"}`}>
-        {purchaseCourses.length === 0 ? <p>No purchased courses</p> : (
+        {purchaseCourses.length === 0 ? (
+          <p>No purchased courses</p>
+        ) : (
           <>
             {purchaseCourses.map((course, index) => (
               <PurchaseCourse course={course} key={index} />

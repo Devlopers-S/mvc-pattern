@@ -14,5 +14,3 @@ async function allCourse(req, res) {
 }
 
 module.exports = { allCourse };
-
-
